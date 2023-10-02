@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrator Access</title>
+</head>
+<body>
+    <h1>Administrator Access</h1>
+    <div>
+        <p id="timer">60</p>
+        <p><span>Username: </span><span id="cipherText">Loading...</span></p>
+        <label for="answerInput">Password: </label>
+        <input type="text" id="answerInput" />
+        <button onclick="checkAnswer()">Submit</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+let timerId;
+
+document.addEventListener("DOMContentLoaded", function() {
+    startGame();
+});
+
+function startGame() {
+    const words = [
+  'CAKE', 'WATER', 'LEMON', 'APPLE', 'GRAPE', 'BREAD', 'CHERRY', 'ORANGE', 'MANGO', 'BANANA',
+  'PEACH', 'PLUM', 'PEAR', 'KIWI', 'GRAIN', 'RICE', 'WHEAT', 'BEANS', 'CORN', 'MILK',
+  'CHEESE', 'BUTTER', 'SUGAR', 'SALT', 'PEPPER', 'HONEY', 'CANDY', 'CHOCOLATE', 'COFFEE', 'TEA',
+  'JUICE', 'SODA', 'WINE', 'BEER', 'VODKA', 'RUM', 'WHISKY', 'GIN', 'BRANDY', 'CHAMPAGNE',
+  'TABLE', 'CHAIR', 'SOFA', 'BED', 'DESK', 'CLOCK', 'LAMP', 'RUG', 'CURTAIN', 'BLANKET',
+  'PILLOW', 'MIRROR', 'CANDLE', 'BOOK', 'PEN', 'PENCIL', 'ERASER', 'PAPER', 'NOTEBOOK', 'ENVELOPE',
+  'STAMP', 'TAPE', 'SCISSORS', 'GLUE', 'STAPLER', 'COMPUTER', 'KEYBOARD', 'MOUSE', 'PRINTER', 'MONITOR',
+  'PHONE', 'TABLET', 'LAPTOP', 'HEADPHONES', 'SPEAKER', 'CAMERA', 'TV', 'RADIO', 'FRIDGE', 'OVEN',
+  'MICROWAVE', 'TOASTER', 'BLENDER', 'MIXER', 'GRILL', 'COOKER', 'POT', 'PAN', 'BOWL', 'PLATE', 
+  'ROCKET', 'DOLPHIN', 'TIGER', 'ELEPHANT', 'GIRAFFE', 'ZEBRA', 'OCTOPUS', 'SPIDER', 'SQUIRREL', 'HEDGEHOG',
+  'KANGAROO', 'KOALA', 'PENGUIN', 'OSTRICH', 'FLAMINGO', 'PEACOCK', 'EAGLE', 'FALCON', 'PARROT', 'SWAN',
+  'PIANO', 'GUITAR', 'DRUM', 'FLUTE', 'VIOLIN', 'HARP', 'TRUMPET', 'SAXOPHONE', 'TROMBONE', 'XYLOPHONE',
+  'DIAMOND', 'RUBY', 'EMERALD', 'SAPPHIRE', 'AMETHYST', 'TOPAZ', 'AQUAMARINE', 'PEARL', 'OPAL', 'GARNET',
+  'FOREST', 'MOUNTAIN', 'RIVER', 'VALLEY', 'DESERT', 'OCEAN', 'ISLAND', 'PRAIRIE', 'HILL', 'PLATEAU',
+  'CINEMA', 'THEATRE', 'MUSEUM', 'LIBRARY', 'RESTAURANT', 'HOTEL', 'CAFE', 'BAKERY', 'SALON', 'PHARMACY',
+  'WALLET', 'PURSE', 'BACKPACK', 'SUITCASE', 'UMBRELLA', 'GLASSES', 'WATCH', 'BRACELET', 'NECKLACE', 'EARRING',
+  'TOMATO', 'POTATO', 'ONION', 'CARROT', 'BROCCOLI', 'SPINACH', 'CABBAGE', 'LETTUCE', 'CUCUMBER', 'PEAS',
+  'VANILLA', 'CHERRY', 'STRAWBERRY', 'RASPBERRY', 'BLUEBERRY', 'CRANBERRY', 'BLACKBERRY', 'PINEAPPLE', 'COCONUT', 'LIME',
+  'ASTEROID', 'METEOR', 'COMET', 'GALAXY', 'STAR', 'PLANET', 'SATELLITE', 'TELESCOPE', 'ASTRONOMY', 'PHYSICS',
+  'ATOM', 'MOLECULE', 'CHEMISTRY', 'BIOLOGY', 'ECOLOGY', 'CLIMATE', 'METEOROLOGY', 'OCEANOGRAPHY', 'GEOLOGY', 'VOLCANO',
+  'CYCLONE', 'TORNADO', 'HURRICANE', 'EQUATOR', 'LATITUDE', 'LONGITUDE', 'MERIDIAN', 'HEMISPHERE', 'CONTINENT', 'ARCHIPELAGO',
+  'FJORD', 'GLACIER', 'ICEBERG', 'PENINSULA', 'ISTHMUS', 'ATOLL', 'CORAL', 'LAGOON', 'MARSH', 'SWAMP',
+  'PRAIRIE', 'SAVANNA', 'STEPPE', 'TUNDRA', 'RAINFOREST', 'JUNGLE', 'MANGROVE', 'MEADOW', 'ORCHARD', 'FARM',
+  'RANCH', 'VINEYARD', 'BARN', 'SILK', 'COTTON', 'DENIM', 'FLANNEL', 'LEATHER', 'SATIN', 'VELVET',
+  'VIOLIN', 'CELLO', 'ORGAN', 'BANJO', 'HARMONICA', 'MANDOLIN', 'SYMPHONY', 'OPERA', 'BALLET', 'CONCERT',
+  'PAINTING', 'SCULPTURE', 'DRAWING', 'SKETCH', 'PORTRAIT', 'LANDSCAPE', 'CERAMIC', 'POTTERY', 'TAPESTRY', 'QUILT',
+  'POETRY', 'NOVEL', 'FICTION', 'LITERATURE', 'COMEDY', 'TRAGEDY', 'FANTASY', 'MYSTERY', 'THRILLER', 'ROMANCE'
+];
+    const plainText = words[Math.floor(Math.random() * words.length)];
+    
+    const cipherText = shiftCipher(plainText);
+    document.getElementById('cipherText').textContent = cipherText;
+    document.getElementById('answerInput').value = ''; // Clear the input field
+    document.getElementById('result').textContent = ''; // Clear the result message
+    
+    document.querySelector('button').addEventListener('click', function() {
+        checkAnswer(plainText);
+    });
+    
+    startTimer();
+}
+
+function startTimer() {
+    let timeLeft = 60; // 1 minute
+    document.getElementById('timer').textContent = timeLeft;
+    
+    timerId = setInterval(function() {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerId);
+            startGame(); // Restart the game when time is over
+        }
+    }, 1000);
+}
+
+function shiftCipher(plainText) {
+    return Array.from(plainText).map(letter => {
+        const charCode = letter.charCodeAt(0);
+        return String.fromCharCode((charCode - 65 + 1) % 26 + 65);
+    }).join('');
+}
+
+function checkAnswer(plainText) {
+    const userInput = document.getElementById('answerInput').value.toUpperCase();
+    const resultElement = document.getElementById('result');
+    
+    if (userInput === plainText) {
+        resultElement.textContent = 'Access granted';
+        clearInterval(timerId); // Stop the timer if the answer is correct
+    } else {
+        resultElement.textContent = 'Access denied';
+    }
+}
+
+
+    </script>
+</body>
+</html>
