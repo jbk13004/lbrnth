@@ -52,9 +52,9 @@ function startGame() {
   'PAINTING', 'SCULPTURE', 'DRAWING', 'SKETCH', 'PORTRAIT', 'LANDSCAPE', 'CERAMIC', 'POTTERY', 'TAPESTRY', 'QUILT',
   'POETRY', 'NOVEL', 'FICTION', 'LITERATURE', 'COMEDY', 'TRAGEDY', 'FANTASY', 'MYSTERY', 'THRILLER', 'ROMANCE'
 ];
+
     const plainText = words[Math.floor(Math.random() * words.length)];
-    
-    const cipherText = shiftCipher(plainText);
+    const cipherText = cipherTextFunction(plainText);
     document.getElementById('cipherText').textContent = cipherText;
     document.getElementById('answerInput').value = ''; // Clear the input field
     document.getElementById('result').textContent = ''; // Clear the result message
@@ -64,6 +64,12 @@ function startGame() {
     });
     
     startTimer();
+}
+
+const cipherMap = {'A': '\u203D', 'B': '\u2031', 'C': '\u203B', 'D': '\u204B','E': '\u0153','F': '\u205C','G': '\u29BF','H': '\u2021','I': '\u2026','J': '\u20AC','K': '\u2117','L': '\u2141','M': '\u00F8','N': '\u2144','O': '\u27C1','P': '\u27F4','Q': '\u21F5','R': '\u2020','S': '\u2981','T': '\u220E','U': '\u220F','V': '\u214A', 'W': '\u22D4', 'X': '\u27F0', 'Y': '\u29A1', 'Z': '\u21F6'};
+
+function cipherTextFunction(plainText) {
+    return Array.from(plainText).map(letter => cipherMap[letter] || letter).join('');
 }
 
 function startTimer() {
@@ -81,13 +87,6 @@ function startTimer() {
     }, 1000);
 }
 
-function shiftCipher(plainText) {
-    return Array.from(plainText).map(letter => {
-        const charCode = letter.charCodeAt(0);
-        return String.fromCharCode((charCode - 65 + 1) % 26 + 65);
-    }).join('');
-}
-
 function checkAnswer(plainText) {
     const userInput = document.getElementById('answerInput').value.toUpperCase();
     const resultElement = document.getElementById('result');
@@ -99,8 +98,6 @@ function checkAnswer(plainText) {
         resultElement.textContent = 'Access denied';
     }
 }
-
-
     </script>
 </body>
 </html>
